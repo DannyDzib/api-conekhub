@@ -2,11 +2,11 @@
 
 ### Endpoints
 
-  - [GET /magazines](#get-magazines)
-  - [GET /magazines/[id]](#get-magazinesid)
+  - [GET /api/escuelas
+  - [GET /api/escuela/[id]
   - [POST /magazines/[id]/articles](#post-magazinesidarticles)
 
-### GET /escuelas
+### GET /api/escuelas
 + Response 200 
 ```json
     [
@@ -14,6 +14,18 @@
             "id_escuela":"",
             "escuela":"",
             "matricula":""
+        }
+    ]
+```
+
+### GET /api/[id]
++ Response 200 
+```json
+    [ 
+        {
+            "id_escuela": 1,
+            "escuela":"string",
+            "matricula": 1
         }
     ]
 ```
