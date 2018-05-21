@@ -36,7 +36,7 @@ $app->get('/api/usuarios', function(Request $request, Response $response){
     
 });
 
-$app->get('/api/usuario/{id}/escuela', function(Request $request, Response $response){
+$app->get('/api/usuario/{id}/carrera', function(Request $request, Response $response){
 
     $id = $request->getAttribute('id');
     
@@ -62,7 +62,7 @@ $app->get('/api/usuario/{id}/escuela', function(Request $request, Response $resp
 });
 
 
-$app->get('/api/usuario/{id}/carrera', function(Request $request, Response $response){
+$app->get('/api/usuario/{id}/escuela', function(Request $request, Response $response){
 
     $id = $request->getAttribute('id');
     
@@ -109,95 +109,6 @@ $app->get('/api/grados', function(Request $request, Response $response){
     
 });
 
-$app->get('/api/escuelas', function(Request $request, Response $response){
-    $query = 'SELECT * FROM escuelas';
-
-    try {
-        $test = 1;
-        $db = new db();
-        $db = $db->connect();
-        $ejecutar = $db->query($query);
-        $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
-        $db = null;
-        
-        //echo $test; 
-        echo json_encode($result);
-
-    } catch(PDOException $e) {
-        echo '
-            { "error": "message": ' . $e->getMessage().'}';
-    }
-    
-});
-
-
-$app->get('/api/escuela/{id}', function(Request $request, Response $response){
-
-    $id = $request->getAttribute('id');
-    
-    $query = "SELECT * FROM escuelas WHERE id_escuela = '$id' ";
-
-    try {
-        
-        $db = new db();
-        $db = $db->connect();
-        $ejecutar = $db->query($query);
-        $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
-        $db = null;
-        
-        echo json_encode($result);
-
-    } catch(PDOException $e) {
-        echo '
-            { "error": "message": "' . $e->getMessage().'"}';
-    }
-    
-});
-
-$app->get('/api/carreras', function(Request $request, Response $response){
-    
-    $query = "SELECT C.carrera, C.id_carrera FROM carreras C, escuelas E WHERE C.id_escuela = E.id_escuela";
-
-    try {
-        
-        $db = new db();
-        $db = $db->connect();
-        $ejecutar = $db->query($query);
-        $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
-        $db = null;
-        
-        echo json_encode($result);
-
-    } catch(PDOException $e) {
-        echo '
-            { "error": "message": "' . $e->getMessage().'"}';
-    }
-    
-});
-
-$app->get('/api/escuela/{id}/carreras', function(Request $request, Response $response){
-
-    $id = $request->getAttribute('id');
-    
-    $query = "SELECT c.carrera FROM carreras c, escuelas es WHERE es.id_escuela = c.id_escuela AND c.id_escuela = '$id'";
-
-    try {
-        
-        $db = new db();
-        $db = $db->connect();
-        $ejecutar = $db->query($query);
-        $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
-        $db = null;
-        
-        echo json_encode($result);
-
-    } catch(PDOException $e) {
-        echo '
-            { "error": "message": "' . $e->getMessage().'"}';
-    }
-    
-});
-
 $app->post('/api/usuario/registrar', function(Request $request, Response $response){
 
     $nombre = $request->getParam('nombre');
@@ -208,8 +119,27 @@ $app->post('/api/usuario/registrar', function(Request $request, Response $respon
     $id_carrera = $request->getParam('id_carrera');
     $id_grado = $request->getParam('id_grado');
     
-    $query = "INSERT INTO usuarios(nombre,apellidos,correo,pass,id_escuela,id_carrera,id_grado) 
-    VALUES (:nombre, :apellidos, :correo, :pass, :id_escuela, :id_carrera, :id_grado)";
+    $query = "INSERT INTO 
+        usuarios(
+            id_usuario,
+            nombre,
+            apellidos,
+            correo,
+            pass,
+            id_escuela,
+            id_carrera,
+            id_grado
+        ) 
+    VALUES (
+        NULL,
+        :nombre, 
+        :apellidos, 
+        :correo, 
+        :pass, 
+        :id_escuela, 
+        :id_carrera, 
+        :id_grado
+        )";
 
     try {
         
