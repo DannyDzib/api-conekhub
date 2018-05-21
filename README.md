@@ -1,5 +1,11 @@
 # Escuelas 
 
+### Endpoints
+
+  - [GET /magazines](#get-magazines)
+  - [GET /magazines/[id]](#get-magazinesid)
+  - [POST /magazines/[id]/articles](#post-magazinesidarticles)
+
 ### GET /escuelas
 + Response 200 
 ```json
