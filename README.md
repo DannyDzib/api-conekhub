@@ -2,6 +2,7 @@
 
 ### GET /escuelas
 + Response 200 
+```json
     [
         {
             "id_escuela":"",
@@ -9,9 +10,11 @@
             "matricula":""
         }
     ]
+```
 
 ### POST /usuarios/registrar
 + Body 
+```json
     {
         "nombre": "Luis ",
         "apellidos": "Escobedo Trenado",
@@ -21,3 +24,4 @@
         "id_carrera": "1",
         "id_grado": "6"
     }
+```
