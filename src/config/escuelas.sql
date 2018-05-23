@@ -24,6 +24,7 @@ CREATE TABLE `carreras` (
 );
 
 
+
 SELECT u.nombre, e.escuela, c.carrera
 FROM usuarios u, escuelas e, carreras c
 WHERE (e.id_escuela = c.id_escuela);
