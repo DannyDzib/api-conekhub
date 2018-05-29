@@ -108,11 +108,80 @@ $app->get($prefix.'/usuario/{id}/habilidades', function(Request $request, Respon
     
 });
 
+$app->get($prefix.'/usuario/{id}/perfil', function(Request $request, Response $response){
+
+    $id = $request->getAttribute('id');
+    
+    $query = "SELECT 
+    U.habilidad FROM habilidades U 
+    INNER JOIN usuario_has_habilidades E 
+    ON U.id_habilidad = E.id_habilidad AND E.id_usuario = '$id'";
+
+    $query2 = "SELECT 
+    U.puesto, U.empresa, U.fecha_inicial, U.fecha_final FROM usuarios_has_experience U 
+    INNER JOIN usuarios E
+    ON U.id_usuario = E.id_usuario AND E.id_usuario = '$id'";
+
+    $query3 = "SELECT U.nombre, U.apellidos  FROM usuarios U 
+    WHERE U.id_usuario = '$id'";
+
+    $query4 = "SELECT E.escuela 
+    FROM usuarios U
+    INNER JOIN escuelas E ON U.id_escuela = E.id_escuela AND U.id_usuario = '$id'";
+
+    $query5 = "SELECT C.carrera 
+    FROM usuarios U
+    INNER JOIN carreras C ON U.id_carrera = C.id_carrera AND U.id_usuario = '$id'";
+
+    try {
+        
+        $db = new db();
+        $db = $db->connect();
+        $eHabilidades = $db->query($query);
+        $eExperiencias = $db->query($query2);
+        $eDatos = $db->query($query3);
+        $eEscuela = $db->query($query4);
+        $eCarrera = $db->query($query5);
+        $hab = $eHabilidades->fetchAll(PDO::FETCH_OBJ);
+        $exp = $eExperiencias->fetchAll(PDO::FETCH_OBJ);
+        $datos = $eDatos->fetch(PDO::FETCH_ASSOC);
+        $escuela = $eEscuela->fetch(PDO::FETCH_ASSOC);
+        $carrera = $eCarrera->fetch(PDO::FETCH_ASSOC);
+
+        $db = null;
+
+        $datos = array(
+            'usuario' => array(
+                'nombre' => $datos['nombre'],
+                'apellidos' => $datos['apellidos'],
+                'datos' => array(
+                    'escuela' => $escuela['escuela'],
+                    'carrera' => $carrera['carrera'],
+                    'habilidades' => $hab,
+                    'experiencia' => $exp
+                )
+            )
+        );
+
+        echo json_encode($datos);
+
+    } catch(PDOException $e) {
+        echo '
+            { "error": "message": "' . $e->getMessage().'"}';
+    }
+    
+});
+
+
 $app->post($prefix.'/email/exists', function(Request $request, Response $response){
     
     $email = $request->getParam('email');
 
-    $query = "SELECT U.correo FROM usuarios U WHERE correo = '$email'";
+    $query = "SELECT U.correo 
+    FROM usuarios U WHERE correo = '$email'
+    UNION 
+    SELECT r.correo 
+    FROM reclutadores r WHERE correo = '$email'";
 
 
     try {
@@ -130,37 +199,11 @@ $app->post($prefix.'/email/exists', function(Request $request, Response $respons
         echo json_encode($existe);
 
     } catch(PDOException $e) {
-        echo '{ "error": "message": ' . $e->getMessage().'}';
+        echo '{ "error": "message": "' . $e->getMessage().'"}';
     }
     
 });
 
-$app->post($prefix.'/email/recluters/exists', function(Request $request, Response $response){
-    
-    $email = $request->getParam('email');
-
-    $query = "SELECT U.correo FROM reclutadores U WHERE correo = '$email'";
-
-
-    try {
-        $test = 1;
-        $db = new db();
-        $db = $db->connect();
-        $ejecutar = $db->query($query);
-        $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
-
-        $existe = Array('exists' => 'false');
-        if($result) {
-            $existe = Array('exists' => 'true');
-        } 
-        $db = null; 
-        echo json_encode($existe);
-
-    } catch(PDOException $e) {
-        echo '{ "error": "message": ' . $e->getMessage().'}';
-    }
-    
-});
 
 $app->get($prefix.'/habilidades', function(Request $request, Response $response){
     $query = 'SELECT * FROM habilidades';
