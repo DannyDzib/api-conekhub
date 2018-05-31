@@ -122,7 +122,7 @@ $app->get($prefix.'/usuario/{id}/perfil', function(Request $request, Response $r
     INNER JOIN usuarios E
     ON U.id_usuario = E.id_usuario AND E.id_usuario = '$id'";
 
-    $query3 = "SELECT U.nombre, U.apellidos  FROM usuarios U 
+    $query3 = "SELECT U.id_usuario, U.nombre, U.apellidos  FROM usuarios U 
     WHERE U.id_usuario = '$id'";
 
     $query4 = "SELECT E.escuela 
@@ -150,13 +150,15 @@ $app->get($prefix.'/usuario/{id}/perfil', function(Request $request, Response $r
 
         $db = null;
 
+        $redirecTo = 'perfil/estudiante/'.$datos['id_usuario'];
         $datos = array(
             'usuario' => array(
                 'nombre' => $datos['nombre'],
                 'apellidos' => $datos['apellidos'],
-                'datos' => array(
-                    'escuela' => $escuela['escuela'],
-                    'carrera' => $carrera['carrera'],
+                'UrlProfile' => $redirecTo,
+                'escuela' => $escuela['escuela'],
+                'carrera' => $carrera['carrera'],
+                'skills' => array(
                     'habilidades' => $hab,
                     'experiencia' => $exp
                 )
@@ -166,8 +168,10 @@ $app->get($prefix.'/usuario/{id}/perfil', function(Request $request, Response $r
         echo json_encode($datos);
 
     } catch(PDOException $e) {
-        echo '
-            { "error": "message": "' . $e->getMessage().'"}';
+        $error = array(
+            'error' => $e->getMessage()
+        );
+        echo json_encode($error);
     }
     
 });
@@ -203,6 +207,74 @@ $app->post($prefix.'/email/exists', function(Request $request, Response $respons
     }
     
 });
+
+$app->post($prefix.'/usuario/{id}/exists', function(Request $request, Response $response){
+    
+    $email = $request->getParam('id');
+
+    $query = "SELECT U.id_usuario
+    FROM usuarios U WHERE id_usuario = '$email'";
+
+
+    try {
+        $test = 1;
+        $db = new db();
+        $db = $db->connect();
+        $ejecutar = $db->query($query);
+        $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
+
+        $existe = Array('exists' => 'false');
+        if($result) {
+            $existe = Array('exists' => 'true');
+        } 
+        $db = null; 
+        echo json_encode($existe);
+
+    } catch(PDOException $e) {
+        echo '{ "error": "message": "' . $e->getMessage().'"}';
+    }
+    
+});
+
+$app->post($prefix.'/upload/photo', function(Request $request, Response $response){
+
+    $imagen = $request->getParam('imagen');
+
+
+    define('UPLOAD_DIR', 'images/');
+	$img = $_POST['imagen'];
+	$data = base64_decode($img);
+	$file = UPLOAD_DIR . uniqid() . '.jpg';
+	$success = file_put_contents($file, $data);
+	print $success ? $file : 'Unable to save the file.';
+
+
+
+    try {
+        
+        // $db = new db();
+        // $db = $db->connect();
+        // $stmt = $db->prepare($query);
+        // $stmt->bindParam(':nombre', $nombre);
+        // $stmt->bindParam(':apellidos', $apellidos);
+        // $stmt->bindParam(':correo', $correo);
+        // $stmt->bindParam(':pass', $passHash);
+        // $stmt->bindParam(':id_escuela', $id_escuela);
+        // $stmt->bindParam(':id_carrera', $id_carrera);
+        // $stmt->bindParam(':id_grado', $id_grado);
+        // $stmt->execute();
+
+       // $json = Array('status' => 'Succes', 'message' => 'Usuario Registrado');
+
+        // echo json_encode($json);
+
+    } catch(PDOException $e) {
+        $json_error = Array('status' => 'Failed', 'message' => 'No se pudo registrar al usuario', 'type_error' => $e->getMessage());
+        echo '{"error": {"text": '.$e->getMessage().'}';
+    }
+    
+});
+
 
 
 $app->get($prefix.'/habilidades', function(Request $request, Response $response){
