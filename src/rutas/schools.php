@@ -55,25 +55,25 @@ $app->get($prefixv2.'/schools', function(Request $request, Response $response){
 $app->get($prefixv2.'/schools/{id}/careers', function(Request $request, Response $response){
 
     $id = $request->getAttribute('id');
-    $query = "SELECT nameCareer FROM careers WHERE school= '$id'";
+    $query = "SELECT id_career, nameCareer as 'name_carrer' FROM careers WHERE school= '$id'";
 
     try {
         $db = new db();
         $db = $db->connect();
         $ejecutar = $db->query($query);
-        $result = $ejecutar->fetchAll(PDO::FETCH_ASSOC);
+        $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
         $db = null;
         
         
 
-        $simple = array();
+        // $simple = array();
 
-        foreach ($result as $value) {
-            $simple[] = $value['nameCareer'];
-        }
+        // foreach ($result as $value) {
+        //     $simple[] = $value['nameCareer'];
+        // }
 
         $escuelas = Array(
-            'careers' => $simple
+            'career' => $result
         );
 
         echo json_encode($escuelas);
