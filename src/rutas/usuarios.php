@@ -5,6 +5,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 
 $prefix = '/api/v1';
+$prefixv2 = '/api/v2';
 
 /////////////////////////////////////
 ////////////////////////////////////
@@ -59,7 +60,7 @@ $app->get($prefix.'/usuario/{id}/carrera', function(Request $request, Response $
 
 $app->get($prefix.'/usuario/{id}/escuela', function(Request $request, Response $response){
 
-    $id = $request->getAttribute('id');
+   
     
     $query = "SELECT U.id_usuario, E.escuela 
     FROM usuarios U
@@ -195,9 +196,9 @@ $app->post($prefix.'/email/exists', function(Request $request, Response $respons
         $ejecutar = $db->query($query);
         $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
 
-        $existe = Array('exists' => 'false');
+        $existe = Array('exists' => false);
         if($result) {
-            $existe = Array('exists' => 'true');
+            $existe = Array('exists' => true);
         } 
         $db = null; 
         echo json_encode($existe);
@@ -208,7 +209,7 @@ $app->post($prefix.'/email/exists', function(Request $request, Response $respons
     
 });
 
-$app->post($prefix.'/usuario/{id}/exists', function(Request $request, Response $response){
+$app->get($prefix.'/usuario/{id}/exists', function(Request $request, Response $response){
     
     $email = $request->getParam('id');
 
@@ -235,6 +236,7 @@ $app->post($prefix.'/usuario/{id}/exists', function(Request $request, Response $
     }
     
 });
+
 
 $app->post($prefix.'/upload/photo', function(Request $request, Response $response){
 
@@ -274,8 +276,6 @@ $app->post($prefix.'/upload/photo', function(Request $request, Response $respons
     }
     
 });
-
-
 
 $app->get($prefix.'/habilidades', function(Request $request, Response $response){
     $query = 'SELECT * FROM habilidades';
@@ -476,5 +476,4 @@ $app->post($prefix.'/session/login', function(Request $request, Response $respon
     }
     
 });
-
 

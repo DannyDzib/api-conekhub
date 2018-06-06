@@ -1,0 +1,1 @@
+CREATE DATABASE conekhub_migration_test;
