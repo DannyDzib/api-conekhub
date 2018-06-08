@@ -14,7 +14,7 @@ $app->post($prefixv2.'/schools/new', function(Request $request, Response $respon
     $query = "INSERT INTO `schools` (nameSchool, shortName) VALUES (:nameschool, :shortname)";
 
     try {
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $stmt = $db->prepare($query);
         $stmt->bindParam(':nameschool', $school);
@@ -39,7 +39,7 @@ $app->get($prefixv2.'/schools', function(Request $request, Response $response){
     $query = 'SELECT nameSchool, shortName FROM schools';
 
     try {
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $ejecutar = $db->query($query);
         $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
@@ -58,7 +58,7 @@ $app->get($prefixv2.'/schools/{id}/careers', function(Request $request, Response
     $query = "SELECT id_career, nameCareer as 'name_carrer' FROM careers WHERE school= '$id'";
 
     try {
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $ejecutar = $db->query($query);
         $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);

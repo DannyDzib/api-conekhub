@@ -1,8 +1,8 @@
 <?php
-    class db{
+    class dbtwo{
         // Properties
         private $dbhost = 'localhost';
-        private $dbname = 'conekhub_test';
+        private $dbname = 'conekhub_migration_test';
         private $dbuser = 'root';
         private $dbpass = '_19Mofeta84';
         // Connect

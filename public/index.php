@@ -9,6 +9,7 @@ use PHPMailer\PHPMailer\Exception;
 
 require '../vendor/autoload.php';
 require '../src/config/db.php';
+require '../src/config/dbtwo.php';
 require '../src/config/hash.php';
 
 $app = new \Slim\App;

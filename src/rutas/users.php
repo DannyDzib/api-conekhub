@@ -10,7 +10,7 @@ $app->get($prefixv2.'/users', function(Request $request, Response $response){
     $query = 'SELECT id, firstName, email FROM users';
 
     try {
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $ejecutar = $db->query($query);
         $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
@@ -31,7 +31,7 @@ $app->get($prefixv2.'/users/{id}', function(Request $request, Response $response
     $query = "SELECT id, firstName, lastName, email, rol, isActive FROM users WHERE id='$id'";
 
     try {
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $ejecutar = $db->query($query);
         $result = $ejecutar->fetch(PDO::FETCH_ASSOC);
@@ -57,7 +57,6 @@ $app->get($prefixv2.'/users/{id}', function(Request $request, Response $response
     
 });
 
-
 $app->get($prefixv2.'/users/following/{id}', function(Request $request, Response $response) {
 
     $id = $request->getAttribute('id');
@@ -67,7 +66,7 @@ $app->get($prefixv2.'/users/following/{id}', function(Request $request, Response
     LEFT JOIN users F ON F.id = U.follower_id WHERE U.user_id = '$id'";
 
     try {
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $ejecutar = $db->query($query);
         $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
@@ -100,7 +99,7 @@ $app->get($prefixv2.'/users/followers/{id}', function(Request $request, Response
 
 
     try {
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $ejecutar = $db->query($query);
         $result = $ejecutar->fetchAll(PDO::FETCH_OBJ);
@@ -129,7 +128,7 @@ $app->post($prefixv2.'/users/followed', function(Request $request, Response $res
 
     try {
 
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $stmt = $db->prepare($query);
         $stmt->bindParam(':user_id', $id_user);
@@ -149,7 +148,6 @@ $app->post($prefixv2.'/users/followed', function(Request $request, Response $res
   
 });
 
-
 $app->delete($prefixv2.'/users/unfollow', function(Request $request, Response $response){
 
     $id_user = $request->getParam('id_user');
@@ -160,7 +158,7 @@ $app->delete($prefixv2.'/users/unfollow', function(Request $request, Response $r
 
     try {
 
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $stmt = $db->prepare($query);
         $stmt->bindParam(':user_id', $id_user);
@@ -179,7 +177,6 @@ $app->delete($prefixv2.'/users/unfollow', function(Request $request, Response $r
   }
   
 });
-
 
 $app->post($prefixv2.'/users/new', function(Request $request, Response $response){
 
@@ -228,7 +225,7 @@ $app->post($prefixv2.'/users/new', function(Request $request, Response $response
 
     try {
         
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $stmt = $db->prepare($query);
         $stmt->bindParam(':name', $name);
@@ -249,7 +246,6 @@ $app->post($prefixv2.'/users/new', function(Request $request, Response $response
     
 });
 
-
 $app->post($prefixv2.'/users/login', function(Request $request, Response $response){
 
       $email = $request->getParam('email');
@@ -265,7 +261,7 @@ $app->post($prefixv2.'/users/login', function(Request $request, Response $respon
       WHERE email = '$email' AND pass = '$passHash'";
 
       try {
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $ejecutar = $db->query($query);
         $result = $ejecutar->fetch(PDO::FETCH_ASSOC);
@@ -298,7 +294,6 @@ $app->post($prefixv2.'/users/login', function(Request $request, Response $respon
     
 });
 
-
 $app->post($prefixv2.'/users/url/exists', function(Request $request, Response $response){
 
     $url = $request->getParam('url');
@@ -307,7 +302,7 @@ $app->post($prefixv2.'/users/url/exists', function(Request $request, Response $r
 
     try {
         
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $ejecutar = $db->query($query);
         $result = $ejecutar->fetch(PDO::FETCH_ASSOC);
@@ -326,7 +321,6 @@ $app->post($prefixv2.'/users/url/exists', function(Request $request, Response $r
     
 });
 
-
 $app->post($prefixv2.'/users/email/exists', function(Request $request, Response $response){
 
     $email = $request->getParam('email');
@@ -335,7 +329,7 @@ $app->post($prefixv2.'/users/email/exists', function(Request $request, Response 
 
     try {
         
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $ejecutar = $db->query($query);
         $result = $ejecutar->fetch(PDO::FETCH_ASSOC);
@@ -384,7 +378,7 @@ $app->post($prefixv2.'/users/add/school', function(Request $request, Response $r
 
     try {
         
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $stmt = $db->prepare($query);
         $stmt->bindParam(':idUser', $idUser);
@@ -402,7 +396,6 @@ $app->post($prefixv2.'/users/add/school', function(Request $request, Response $r
     }
     
 });
-
 
 $app->post($prefixv2.'/users/add/post',  function(Request $request, Response $response){
 
@@ -433,7 +426,7 @@ $app->post($prefixv2.'/users/add/post',  function(Request $request, Response $re
 
     try {
             
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $stmt = $db->prepare($query);
         $stmt->bindParam(':PostTitle', $PostTitle);
@@ -484,7 +477,7 @@ $app->post($prefixv2.'/users/add/experience',  function(Request $request, Respon
 
     try {
             
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $stmt = $db->prepare($query);
         $stmt->bindParam(':employment', $employment);
@@ -517,7 +510,7 @@ $app->put($prefixv2.'/users/activated', function(Request $request, Response $res
 
     try {
         
-        $db = new db();
+        $db = new dbtwo();
         $db = $db->connect();
         $stmt = $db->prepare($query);
         $stmt->bindParam(':id', $id);

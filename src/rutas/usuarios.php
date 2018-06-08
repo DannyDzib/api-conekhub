@@ -5,7 +5,6 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 
 $prefix = '/api/v1';
-$prefixv2 = '/api/v2';
 
 /////////////////////////////////////
 ////////////////////////////////////
